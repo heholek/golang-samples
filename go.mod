@@ -40,7 +40,7 @@ require (
 	github.com/philhofer/fwd v1.0.0 // indirect
 	github.com/sendgrid/smtpapi-go v0.6.0 // indirect
 	github.com/tinylib/msgp v1.1.0 // indirect
-	go.opencensus.io v0.22.2
+	go.opencensus.io v0.22.3
 	golang.org/x/exp v0.0.0-20191129062945-2f5052295587
 	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553
 	golang.org/x/oauth2 v0.0.0-20191202225959-858c2ad4c8b6
