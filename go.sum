@@ -139,6 +139,8 @@ github.com/linkedin/goavro/v2 v2.9.7 h1:Vd++Rb/RKcmNJjM0HP/JJFMEWa21eUBVKPYlKehO
 github.com/linkedin/goavro/v2 v2.9.7/go.mod h1:UgQUb2N/pmueQYH9bfqFioWxzYCZXSfF8Jw03O5sjqA=
 github.com/mailgun/mailgun-go/v3 v3.6.3 h1:dkPP10w15Igt0uM313CStG9+gd/XqdiqO0862zNAXbs=
 github.com/mailgun/mailgun-go/v3 v3.6.3/go.mod h1:ZjVnH8S0dR2BLjvkZc/rxwerdcirzlA12LQDuGAadR0=
+github.com/mailgun/mailgun-go/v3 v3.6.4 h1:+cvbZRgLSHivbz/w1iWLmxVl6Bqf4geD2D7QMj4+8PE=
+github.com/mailgun/mailgun-go/v3 v3.6.4/go.mod h1:ZjVnH8S0dR2BLjvkZc/rxwerdcirzlA12LQDuGAadR0=
 github.com/mailjet/mailjet-apiv3-go v0.0.0-20190724151621-55e56f74078c h1:453esPLsgvTUiIBglY4t4JEi6oKZ36RHguI89p+Lvc8=
 github.com/mailjet/mailjet-apiv3-go v0.0.0-20190724151621-55e56f74078c/go.mod h1:ogN8Sxy3n5VKLhQxbtSBM3ICG/VgjXS/akQJIoDSrgA=
 github.com/mailru/easyjson v0.0.0-20180823135443-60711f1a8329 h1:2gxZ0XQIU/5z3Z3bUBu+FXuk2pFbkN6tcwi/pjyaDic=
