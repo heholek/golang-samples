@@ -13,7 +13,7 @@ require (
 	cloud.google.com/go/spanner v1.1.0
 	cloud.google.com/go/storage v1.3.0
 	contrib.go.opencensus.io/exporter/stackdriver v0.12.8
-	firebase.google.com/go v3.10.0+incompatible
+	firebase.google.com/go v3.12.1+incompatible
 	github.com/aws/aws-sdk-go v1.26.2
 	github.com/bmatcuk/doublestar v1.2.1
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
