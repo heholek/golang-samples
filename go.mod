@@ -14,14 +14,14 @@ require (
 	cloud.google.com/go/storage v1.3.0
 	contrib.go.opencensus.io/exporter/stackdriver v0.12.8
 	firebase.google.com/go v3.10.0+incompatible
-	github.com/aws/aws-sdk-go v1.26.2
+	github.com/aws/aws-sdk-go v1.31.0
 	github.com/bmatcuk/doublestar v1.2.1
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
 	github.com/bradfitz/gomemcache v0.0.0-20190913173617-a41fca850d0b
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/eclipse/paho.mqtt.golang v1.2.0
 	github.com/fluent/fluent-logger-golang v1.4.0
-	github.com/go-sql-driver/mysql v1.4.1
+	github.com/go-sql-driver/mysql v1.5.0
 	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/golang/groupcache v0.0.0-20191027212112-611e8accdfc9 // indirect
 	github.com/golang/protobuf v1.3.2
@@ -42,7 +42,7 @@ require (
 	github.com/tinylib/msgp v1.1.0 // indirect
 	go.opencensus.io v0.22.2
 	golang.org/x/exp v0.0.0-20191129062945-2f5052295587
-	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553
+	golang.org/x/net v0.0.0-20200202094626-16171245cfb2
 	golang.org/x/oauth2 v0.0.0-20191202225959-858c2ad4c8b6
 	golang.org/x/sys v0.0.0-20191113165036-4c7a9d0fe056 // indirect
 	golang.org/x/text v0.3.2
