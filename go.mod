@@ -3,15 +3,15 @@ module github.com/GoogleCloudPlatform/golang-samples
 go 1.11
 
 require (
-	cloud.google.com/go v0.49.0
-	cloud.google.com/go/bigquery v1.3.0
+	cloud.google.com/go v0.57.0
+	cloud.google.com/go/bigquery v1.8.0
 	cloud.google.com/go/bigtable v1.1.0
-	cloud.google.com/go/datastore v1.0.0
+	cloud.google.com/go/datastore v1.1.0
 	cloud.google.com/go/firestore v1.1.0
 	cloud.google.com/go/logging v1.0.0
-	cloud.google.com/go/pubsub v1.0.1
+	cloud.google.com/go/pubsub v1.4.0
 	cloud.google.com/go/spanner v1.1.0
-	cloud.google.com/go/storage v1.3.0
+	cloud.google.com/go/storage v1.8.0
 	contrib.go.opencensus.io/exporter/stackdriver v0.12.8
 	firebase.google.com/go v3.10.0+incompatible
 	github.com/aws/aws-sdk-go v1.26.2
@@ -23,16 +23,13 @@ require (
 	github.com/fluent/fluent-logger-golang v1.4.0
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/gofrs/uuid v3.2.0+incompatible
-	github.com/golang/groupcache v0.0.0-20191027212112-611e8accdfc9 // indirect
-	github.com/golang/protobuf v1.3.2
+	github.com/golang/protobuf v1.4.2
 	github.com/gomodule/redigo v2.0.0+incompatible
-	github.com/google/pprof v0.0.0-20191105193234-27840fff0d09 // indirect
 	github.com/google/uuid v1.1.1
 	github.com/googleapis/gax-go/v2 v2.0.5
 	github.com/gorilla/mux v1.7.3
 	github.com/gorilla/websocket v1.4.1
 	github.com/h2non/filetype v1.0.10
-	github.com/jstemmer/go-junit-report v0.9.1 // indirect
 	github.com/lib/pq v1.2.0
 	github.com/linkedin/goavro/v2 v2.9.7
 	github.com/mailgun/mailgun-go/v3 v3.6.3
@@ -40,17 +37,16 @@ require (
 	github.com/philhofer/fwd v1.0.0 // indirect
 	github.com/sendgrid/smtpapi-go v0.6.0 // indirect
 	github.com/tinylib/msgp v1.1.0 // indirect
-	go.opencensus.io v0.22.2
-	golang.org/x/exp v0.0.0-20191129062945-2f5052295587
-	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553
-	golang.org/x/oauth2 v0.0.0-20191202225959-858c2ad4c8b6
-	golang.org/x/sys v0.0.0-20191113165036-4c7a9d0fe056 // indirect
+	go.opencensus.io v0.22.3
+	golang.org/x/exp v0.0.0-20200224162631-6cc2880d07d6
+	golang.org/x/net v0.0.0-20200520182314-0ba52f642ac2
+	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/text v0.3.2
-	golang.org/x/tools v0.0.0-20191216052735-49a3e744a425
-	google.golang.org/api v0.14.0
-	google.golang.org/appengine v1.6.5
-	google.golang.org/genproto v0.0.0-20191206224255-0243a4be9c8f
-	google.golang.org/grpc v1.25.1
+	golang.org/x/tools v0.0.0-20200527183253-8e7acdbce89d
+	google.golang.org/api v0.25.0
+	google.golang.org/appengine v1.6.6
+	google.golang.org/genproto v0.0.0-20200528110217-3d3490e7e671
+	google.golang.org/grpc v1.29.1
 	gopkg.in/sendgrid/sendgrid-go.v2 v2.0.0
 	gopkg.in/yaml.v2 v2.2.7
 )
