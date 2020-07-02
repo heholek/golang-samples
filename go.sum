@@ -30,6 +30,8 @@ cloud.google.com/go/bigquery v1.8.0 h1:PQcPefKFdaIzjQFbiyOgAqyx8q5djaE7x9Sqe712D
 cloud.google.com/go/bigquery v1.8.0/go.mod h1:J5hqkt3O0uAFnINi6JXValWIb1v0goeZM77hZzJN/fQ=
 cloud.google.com/go/bigtable v1.3.0 h1:PAplkJLXheOLlK5PPyy4/HXtPzHn+1/LaYDWIeGxnio=
 cloud.google.com/go/bigtable v1.3.0/go.mod h1:z5EyKrPE8OQmeg4h5MNdKvuSnI9CCT49Ki3f23aBzio=
+cloud.google.com/go/bigtable v1.4.0 h1:53CVzqOOfDOZLgwdbxktMY7FVcg+V7VbFIvz6TT6+x4=
+cloud.google.com/go/bigtable v1.4.0/go.mod h1:AgdyvSw1ksn4wdYT4sXDZSXlaaM6WpdWQyD7DE5ggPM=
 cloud.google.com/go/datastore v1.0.0/go.mod h1:LXYbyblFSglQ5pkeyhO+Qmw7ukd3C+pD7TKLgZqpHYE=
 cloud.google.com/go/datastore v1.1.0 h1:/May9ojXjRkPBNVrq+oWLqmWCkr4OU5uRY29bu0mRyQ=
 cloud.google.com/go/datastore v1.1.0/go.mod h1:umbIZjpQpHh4hmRpGhH4tLFup+FVzqBi1b3c64qFpCk=
