@@ -29,6 +29,7 @@ import (
 	"cloud.google.com/go/pubsub"
 
 	"github.com/GoogleCloudPlatform/golang-samples/internal/testutil"
+	"github.com/google/go-cmp/cmp"
 )
 
 var topicID string
@@ -194,6 +195,44 @@ func TestDelete(t *testing.T) {
 	}
 }
 
+func TestPullMsgsAsync(t *testing.T) {
+	client := setup(t)
+	ctx := context.Background()
+	tc := testutil.SystemTest(t)
+	asyncTopicID := topicID + "-async"
+	asyncSubID := subID + "-async"
+
+	topic, err := getOrCreateTopic(ctx, client, asyncTopicID)
+	if err != nil {
+		t.Fatalf("getOrCreateTopic: %v", err)
+	}
+	defer topic.Delete(ctx)
+	defer topic.Stop()
+
+	cfg := &pubsub.SubscriptionConfig{
+		Topic: topic,
+	}
+	sub, err := getOrCreateSub(ctx, client, asyncSubID, cfg)
+	if err != nil {
+		t.Fatalf("getOrCreateSub: %v", err)
+	}
+	defer sub.Delete(ctx)
+
+	// Publish 10 messages on the topic.
+	const numMsgs = 10
+	publishMsgs(ctx, topic, numMsgs)
+
+	buf := new(bytes.Buffer)
+	err = pullMsgs(buf, tc.ProjectID, asyncSubID)
+	if err != nil {
+		t.Fatalf("failed to pull messages: %v", err)
+	}
+	// Check for number of newlines, which should correspond with number of messages.
+	if got := strings.Count(buf.String(), "\n"); got != numMsgs {
+		t.Fatalf("pullMsgsSync got %d messages, want %d", got, numMsgs)
+	}
+}
+
 func TestPullMsgsSync(t *testing.T) {
 	client := setup(t)
 	ctx := context.Background()
@@ -208,7 +247,10 @@ func TestPullMsgsSync(t *testing.T) {
 	defer topic.Delete(ctx)
 	defer topic.Stop()
 
-	sub, err := getOrCreateSub(ctx, client, topic, subIDSync)
+	cfg := &pubsub.SubscriptionConfig{
+		Topic: topic,
+	}
+	sub, err := getOrCreateSub(ctx, client, subIDSync, cfg)
 	if err != nil {
 		t.Fatalf("getOrCreateSub: %v", err)
 	}
@@ -219,7 +261,7 @@ func TestPullMsgsSync(t *testing.T) {
 	publishMsgs(ctx, topic, numMsgs)
 
 	buf := new(bytes.Buffer)
-	err = pullMsgsSync(buf, tc.ProjectID, subIDSync, topic)
+	err = pullMsgsSync(buf, tc.ProjectID, subIDSync)
 	if err != nil {
 		t.Fatalf("failed to pull messages: %v", err)
 	}
@@ -243,7 +285,10 @@ func TestPullMsgsConcurrencyControl(t *testing.T) {
 	defer topic.Delete(ctx)
 	defer topic.Stop()
 
-	sub, err := getOrCreateSub(ctx, client, topic, subIDConc)
+	cfg := &pubsub.SubscriptionConfig{
+		Topic: topic,
+	}
+	sub, err := getOrCreateSub(ctx, client, subIDConc, cfg)
 	if err != nil {
 		t.Fatalf("getOrCreateSub: %v", err)
 	}
@@ -251,7 +296,7 @@ func TestPullMsgsConcurrencyControl(t *testing.T) {
 
 	// Publish 5 message to test with.
 	const numMsgs = 5
-	publishMsgs(ctx, topic, 5)
+	publishMsgs(ctx, topic, numMsgs)
 
 	buf := new(bytes.Buffer)
 	if err := pullMsgsConcurrenyControl(buf, tc.ProjectID, subIDConc); err != nil {
@@ -260,6 +305,171 @@ func TestPullMsgsConcurrencyControl(t *testing.T) {
 	// Check for number of newlines, which should correspond with number of messages.
 	if got := strings.Count(buf.String(), "\n"); got != numMsgs {
 		t.Fatalf("pullMsgsConcurrencyControl got %d messages, want %d", got, numMsgs)
+	}
+}
+
+func TestCreateWithDeadLetterPolicy(t *testing.T) {
+	client := setup(t)
+	defer client.Close()
+	ctx := context.Background()
+	tc := testutil.SystemTest(t)
+	deadLetterSourceID := topicID + "-dead-letter-source"
+	deadLetterSubID := subID + "-dead-letter-sub"
+	deadLetterSinkID := topicID + "-dead-letter-sink"
+
+	deadLetterSourceTopic, err := getOrCreateTopic(ctx, client, deadLetterSourceID)
+	if err != nil {
+		t.Fatalf("getOrCreateTopic: %v", err)
+	}
+	defer deadLetterSourceTopic.Delete(ctx)
+	defer deadLetterSourceTopic.Stop()
+
+	deadLetterSinkTopic, err := getOrCreateTopic(ctx, client, deadLetterSinkID)
+	if err != nil {
+		t.Fatalf("getOrCreateTopic: %v", err)
+	}
+	defer deadLetterSinkTopic.Delete(ctx)
+	defer deadLetterSinkTopic.Stop()
+
+	buf := new(bytes.Buffer)
+	if err := createSubWithDeadLetter(buf, tc.ProjectID, deadLetterSubID, deadLetterSourceID, deadLetterSinkTopic.String()); err != nil {
+		t.Fatalf("createSubWithDeadLetter failed: %v", err)
+	}
+	sub := client.Subscription(deadLetterSubID)
+	ok, err := sub.Exists(context.Background())
+	if err != nil {
+		t.Fatalf("sub.Exists failed: %v", err)
+	}
+	if !ok {
+		t.Fatalf("got none; want sub = %q", deadLetterSubID)
+	}
+	defer sub.Delete(ctx)
+
+	cfg, err := sub.Config(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := cfg.DeadLetterPolicy
+	want := &pubsub.DeadLetterPolicy{
+		DeadLetterTopic:     deadLetterSinkTopic.String(),
+		MaxDeliveryAttempts: 10,
+	}
+	if !cmp.Equal(got, want) {
+		t.Fatalf("got cfg: %+v; want cfg: %+v", got, want)
+	}
+}
+
+func TestUpdateDeadLetterPolicy(t *testing.T) {
+	client := setup(t)
+	defer client.Close()
+	ctx := context.Background()
+	tc := testutil.SystemTest(t)
+	deadLetterSourceID := topicID + "-update-source"
+	deadLetterSubID := subID + "-update-sub"
+	deadLetterSinkID := topicID + "-update-sink"
+
+	deadLetterSourceTopic, err := getOrCreateTopic(ctx, client, deadLetterSourceID)
+	if err != nil {
+		t.Fatalf("getOrCreateTopic: %v", err)
+	}
+	defer deadLetterSourceTopic.Delete(ctx)
+	defer deadLetterSourceTopic.Stop()
+
+	deadLetterSinkTopic, err := getOrCreateTopic(ctx, client, deadLetterSinkID)
+	if err != nil {
+		t.Fatalf("getOrCreateTopic: %v", err)
+	}
+	defer deadLetterSinkTopic.Delete(ctx)
+	defer deadLetterSinkTopic.Stop()
+
+	buf := new(bytes.Buffer)
+	if err := createSubWithDeadLetter(buf, tc.ProjectID, deadLetterSubID, deadLetterSourceID, deadLetterSinkTopic.String()); err != nil {
+		t.Fatalf("createSubWithDeadLetter failed: %v", err)
+	}
+	sub := client.Subscription(deadLetterSubID)
+	ok, err := sub.Exists(context.Background())
+	if err != nil {
+		t.Fatalf("sub.Exists failed: %v", err)
+	}
+	if !ok {
+		t.Fatalf("got none; want sub = %q", deadLetterSubID)
+	}
+	defer sub.Delete(ctx)
+
+	if err := updateDeadLetter(buf, tc.ProjectID, deadLetterSubID, deadLetterSinkTopic.String()); err != nil {
+		t.Fatalf("updateDeadLetter failed: %v", err)
+	}
+
+	cfg, err := sub.Config(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := cfg.DeadLetterPolicy
+	want := &pubsub.DeadLetterPolicy{
+		DeadLetterTopic:     deadLetterSinkTopic.String(),
+		MaxDeliveryAttempts: 20,
+	}
+	if !cmp.Equal(got, want) {
+		t.Fatalf("got cfg: %+v; want cfg: %+v", got, want)
+	}
+
+	if err := removeDeadLetterTopic(buf, tc.ProjectID, deadLetterSubID); err != nil {
+		t.Fatalf("removeDeadLetterTopic failed: %v", err)
+	}
+	cfg, err = sub.Config(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got = cfg.DeadLetterPolicy
+	if got != nil {
+		t.Fatalf("got dead letter policy: %+v, want nil", got)
+	}
+}
+
+func TestPullMsgsDeadLetterDeliveryAttempts(t *testing.T) {
+	client := setup(t)
+	defer client.Close()
+	ctx := context.Background()
+	tc := testutil.SystemTest(t)
+	deadLetterSourceID := topicID + "-delivery-source"
+	deadLetterSinkID := topicID + "-delivery-sink"
+	deadLetterSubID := subID + "-delivery-sub"
+
+	deadLetterSourceTopic, err := getOrCreateTopic(ctx, client, deadLetterSourceID)
+	if err != nil {
+		t.Fatalf("getOrCreateTopic: %v", err)
+	}
+	defer deadLetterSourceTopic.Delete(ctx)
+	defer deadLetterSourceTopic.Stop()
+
+	deadLetterSinkTopic, err := getOrCreateTopic(ctx, client, deadLetterSinkID)
+	if err != nil {
+		t.Fatalf("getOrCreateTopic: %v", err)
+	}
+	defer deadLetterSinkTopic.Delete(ctx)
+	defer deadLetterSinkTopic.Stop()
+
+	sub, err := getOrCreateSub(ctx, client, deadLetterSubID, &pubsub.SubscriptionConfig{
+		Topic: deadLetterSourceTopic,
+		DeadLetterPolicy: &pubsub.DeadLetterPolicy{
+			DeadLetterTopic:     deadLetterSinkTopic.String(),
+			MaxDeliveryAttempts: 10,
+		},
+	})
+	defer sub.Delete(ctx)
+
+	if err = publishMsgs(ctx, deadLetterSourceTopic, 1); err != nil {
+		t.Fatalf("publishMsgs failed: %v", err)
+	}
+
+	buf := new(bytes.Buffer)
+	if err := pullMsgsDeadLetterDeliveryAttempt(buf, tc.ProjectID, deadLetterSubID); err != nil {
+		t.Fatalf("pullMsgsDeadLetterDeliveryAttempt failed: %v", err)
+	}
+	got := buf.String()
+	want := "delivery attempts: 1"
+	if !strings.Contains(got, want) {
+		t.Fatalf("pullMsgsDeadLetterDeliveryAttempts got %s, want %s", got, want)
 	}
 }
 
@@ -297,16 +507,14 @@ func getOrCreateTopic(ctx context.Context, client *pubsub.Client, topicID string
 }
 
 // getOrCreateSub gets a subscription or creates it if it doesn't exist.
-func getOrCreateSub(ctx context.Context, client *pubsub.Client, topic *pubsub.Topic, subID string) (*pubsub.Subscription, error) {
+func getOrCreateSub(ctx context.Context, client *pubsub.Client, subID string, cfg *pubsub.SubscriptionConfig) (*pubsub.Subscription, error) {
 	sub := client.Subscription(subID)
 	ok, err := sub.Exists(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to check if subscription exists: %v", err)
 	}
 	if !ok {
-		sub, err = client.CreateSubscription(ctx, subID, pubsub.SubscriptionConfig{
-			Topic: topic,
-		})
+		sub, err = client.CreateSubscription(ctx, subID, *cfg)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create subscription (%q): %v", topicID, err)
 		}

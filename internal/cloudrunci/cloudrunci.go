@@ -48,6 +48,9 @@ type Service struct {
 	// The project to deploy to.
 	ProjectID string
 
+	// Allow unauthenticated request.
+	AllowUnauthenticated bool
+
 	// The platform to deploy to.
 	Platform Platform
 
@@ -255,7 +258,6 @@ func (s *Service) operationLabel(op string) string {
 func (s *Service) deployCmd() *exec.Cmd {
 	args := append([]string{
 		"--quiet",
-		"beta",
 		"run",
 		"deploy",
 		s.version(),
@@ -269,6 +271,9 @@ func (s *Service) deployCmd() *exec.Cmd {
 		for k := range s.Env {
 			args = append(args, "--set-env-vars", s.Env.Variable(k))
 		}
+	}
+	if s.AllowUnauthenticated {
+		args = append(args, "--allow-unauthenticated")
 	}
 
 	// NOTE: if the "beta" component is not available, and this is run in parallel,
@@ -318,7 +323,6 @@ func (s *Service) deleteImageCmd() *exec.Cmd {
 func (s *Service) deleteServiceCmd() *exec.Cmd {
 	args := append([]string{
 		"--quiet",
-		"beta",
 		"run",
 		"services",
 		"delete",
@@ -338,7 +342,6 @@ func (s *Service) deleteServiceCmd() *exec.Cmd {
 func (s *Service) urlCmd() *exec.Cmd {
 	args := append([]string{
 		"--quiet",
-		"beta",
 		"run",
 		"services",
 		"describe",
