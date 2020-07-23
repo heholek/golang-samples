@@ -9,7 +9,7 @@ require (
 	cloud.google.com/go/datastore v1.2.0
 	cloud.google.com/go/firestore v1.2.0
 	cloud.google.com/go/logging v1.0.0
-	cloud.google.com/go/pubsub v1.4.0
+	cloud.google.com/go/pubsub v1.6.0
 	cloud.google.com/go/spanner v1.6.0
 	cloud.google.com/go/storage v1.10.0
 	contrib.go.opencensus.io/exporter/stackdriver v0.13.2
@@ -43,10 +43,10 @@ require (
 	golang.org/x/net v0.0.0-20200625001655-4c5254603344
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/text v0.3.3
-	golang.org/x/tools v0.0.0-20200630154851-b2d8b0336632
-	google.golang.org/api v0.28.0
+	golang.org/x/tools v0.0.0-20200721223218-6123e77877b2
+	google.golang.org/api v0.29.0
 	google.golang.org/appengine v1.6.6
-	google.golang.org/genproto v0.0.0-20200626011028-ee7919e894b5
+	google.golang.org/genproto v0.0.0-20200722002428-88e341933a54
 	google.golang.org/grpc v1.30.0
 	google.golang.org/grpc/examples v0.0.0-20200617041141-9a465503579e
 	gopkg.in/sendgrid/sendgrid-go.v2 v2.0.0
