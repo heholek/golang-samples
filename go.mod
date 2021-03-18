@@ -3,14 +3,14 @@ module github.com/GoogleCloudPlatform/golang-samples
 go 1.11
 
 require (
-	cloud.google.com/go v0.60.0
+	cloud.google.com/go v0.79.0
 	cloud.google.com/go/bigquery v1.8.0
 	cloud.google.com/go/bigtable v1.3.0
 	cloud.google.com/go/datastore v1.2.0
 	cloud.google.com/go/firestore v1.2.0
 	cloud.google.com/go/logging v1.0.0
 	cloud.google.com/go/pubsub v1.4.0
-	cloud.google.com/go/spanner v1.6.0
+	cloud.google.com/go/spanner v1.16.0
 	cloud.google.com/go/storage v1.10.0
 	contrib.go.opencensus.io/exporter/stackdriver v0.13.2
 	github.com/aws/aws-sdk-go v1.32.13
@@ -22,10 +22,10 @@ require (
 	github.com/fluent/fluent-logger-golang v1.5.0
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/gofrs/uuid v3.3.0+incompatible
-	github.com/golang/protobuf v1.4.2
+	github.com/golang/protobuf v1.4.3
 	github.com/gomodule/redigo v2.0.0+incompatible
-	github.com/google/go-cmp v0.5.0
-	github.com/google/uuid v1.1.1
+	github.com/google/go-cmp v0.5.5
+	github.com/google/uuid v1.1.2
 	github.com/googleapis/gax-go/v2 v2.0.5
 	github.com/gorilla/mux v1.7.4
 	github.com/gorilla/websocket v1.4.2
@@ -38,16 +38,16 @@ require (
 	github.com/philhofer/fwd v1.0.0 // indirect
 	github.com/sendgrid/smtpapi-go v0.6.0 // indirect
 	github.com/tinylib/msgp v1.1.2 // indirect
-	go.opencensus.io v0.22.4
+	go.opencensus.io v0.23.0
 	golang.org/x/exp v0.0.0-20200513190911-00229845015e
-	golang.org/x/net v0.0.0-20200625001655-4c5254603344
-	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
-	golang.org/x/text v0.3.3
-	golang.org/x/tools v0.0.0-20200630154851-b2d8b0336632
-	google.golang.org/api v0.28.0
-	google.golang.org/appengine v1.6.6
-	google.golang.org/genproto v0.0.0-20200626011028-ee7919e894b5
-	google.golang.org/grpc v1.30.0
+	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110
+	golang.org/x/oauth2 v0.0.0-20210313182246-cd4f82c27b84
+	golang.org/x/text v0.3.5
+	golang.org/x/tools v0.1.0
+	google.golang.org/api v0.42.0
+	google.golang.org/appengine v1.6.7
+	google.golang.org/genproto v0.0.0-20210317182105-75c7a8546eb9
+	google.golang.org/grpc v1.36.0
 	google.golang.org/grpc/examples v0.0.0-20200617041141-9a465503579e
 	gopkg.in/sendgrid/sendgrid-go.v2 v2.0.0
 	gopkg.in/yaml.v2 v2.3.0
